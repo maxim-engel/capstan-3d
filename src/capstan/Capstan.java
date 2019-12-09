@@ -1,20 +1,18 @@
 package capstan;
 
 import javafx.application.Application;
-import javafx.geometry.Point3D;
 import javafx.scene.*;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.PickResult;
+import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
-import javafx.scene.shape.Sphere;
-import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 
 /**
+ * @author LabGroup
  * @version 0.1
  */
-public class Main extends Application {
+public class Capstan extends Application {
 
     private static final float SCENE_WIDTH = 1000;
     private static final float SCENE_HEIGHT = 800;
@@ -25,16 +23,25 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        PhongMaterial green_surface = new PhongMaterial(Color.DARKOLIVEGREEN);
+
+        PhongMaterial wood = new PhongMaterial();
+        wood.setDiffuseMap(new Image(getClass().getResourceAsStream(
+                "/resources/Planks12_col.jpg")));
+        wood.setBumpMap(new Image(getClass().getResourceAsStream(
+                "/resources/Planks12_disp.jpg")));
+
         Cylinder wheel = new Cylinder(WHEEL_RADIUS, 10);
+        wheel.setMaterial(wood);
         wheel.rotateProperty().set(90);
         wheel.translateYProperty().set(-WHEEL_RADIUS);
         wheel.translateXProperty().set(-POLE_LENGTH);
 
         Cylinder pole = new Cylinder(5, POLE_LENGTH);
+        pole.setMaterial(green_surface);
         pole.rotateProperty().set(90);
         pole.translateYProperty().set(-WHEEL_RADIUS);
         pole.translateXProperty().set(-POLE_LENGTH / 2);
-
 
         Group group = new Group();
         group.getChildren().add(wheel);
