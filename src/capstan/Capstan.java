@@ -1,6 +1,8 @@
 package capstan;
 
 import javafx.application.Application;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.*;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -18,8 +20,16 @@ public class Capstan extends Application {
     private static final float SCENE_HEIGHT = 800;
     private static final float WHEEL_RADIUS = 120;
     private static final float POLE_LENGTH = 450;
+
     private Scene scene;
     private PerspectiveCamera camera;
+    private Group group;
+
+    private double anchorX, anchorY;
+    private double anchorAngleX = 0;
+    private double anchorAngleY = 0;
+    private final DoubleProperty angleX = new SimpleDoubleProperty(0);
+    private final DoubleProperty angleY = new SimpleDoubleProperty(0);
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -43,7 +53,7 @@ public class Capstan extends Application {
         pole.translateYProperty().set(-WHEEL_RADIUS);
         pole.translateXProperty().set(-POLE_LENGTH / 2);
 
-        Group group = new Group();
+        group = new Group();
         group.getChildren().add(wheel);
         group.getChildren().add(pole);
 
