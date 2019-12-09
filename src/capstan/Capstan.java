@@ -1,13 +1,13 @@
 package capstan;
 
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.*;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
+import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 
 /**
@@ -24,16 +24,14 @@ public class Capstan extends Application {
     private Scene scene;
     private PerspectiveCamera camera;
     private Group group;
-
-    private double anchorX, anchorY;
-    private double anchorAngleX = 0;
-    private double anchorAngleY = 0;
-    private final DoubleProperty angleX = new SimpleDoubleProperty(0);
-    private final DoubleProperty angleY = new SimpleDoubleProperty(0);
+    private Cylinder wheel;
+    private Cylinder pole;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        PhongMaterial green_surface = new PhongMaterial(Color.DARKOLIVEGREEN);
+        PhongMaterial steel = new PhongMaterial(Color.DARKOLIVEGREEN);
+        steel.setBumpMap(new Image(getClass().getResourceAsStream(
+                "/resources/Metal23_disp.jpg")));
 
         PhongMaterial wood = new PhongMaterial();
         wood.setDiffuseMap(new Image(getClass().getResourceAsStream(
@@ -41,14 +39,14 @@ public class Capstan extends Application {
         wood.setBumpMap(new Image(getClass().getResourceAsStream(
                 "/resources/Planks12_disp.jpg")));
 
-        Cylinder wheel = new Cylinder(WHEEL_RADIUS, 10);
+        wheel = new Cylinder(WHEEL_RADIUS, 10);
         wheel.setMaterial(wood);
         wheel.rotateProperty().set(90);
         wheel.translateYProperty().set(-WHEEL_RADIUS);
         wheel.translateXProperty().set(-POLE_LENGTH);
 
-        Cylinder pole = new Cylinder(5, POLE_LENGTH);
-        pole.setMaterial(green_surface);
+        pole = new Cylinder(5, POLE_LENGTH);
+        pole.setMaterial(steel);
         pole.rotateProperty().set(90);
         pole.translateYProperty().set(-WHEEL_RADIUS);
         pole.translateXProperty().set(-POLE_LENGTH / 2);
@@ -56,6 +54,7 @@ public class Capstan extends Application {
         group = new Group();
         group.getChildren().add(wheel);
         group.getChildren().add(pole);
+        group.setRotationAxis(Rotate.X_AXIS);
 
         scene = new Scene(group, SCENE_WIDTH, SCENE_HEIGHT);
         camera = new PerspectiveCamera(true);
@@ -67,5 +66,17 @@ public class Capstan extends Application {
         primaryStage.setTitle("Capstan");
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        startTheAnimation();
+    }
+
+    private void startTheAnimation() {
+        AnimationTimer timer = new AnimationTimer() {
+            @Override
+            public void handle(long l) {
+                group.rotateProperty().set(group.getRotate() + 1);
+            }
+        };
+        timer.start();
     }
 }
