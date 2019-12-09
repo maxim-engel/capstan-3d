@@ -29,7 +29,9 @@ public class Capstan extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        PhongMaterial steel = new PhongMaterial(Color.DARKOLIVEGREEN);
+        PhongMaterial steel = new PhongMaterial();
+        steel.setDiffuseMap(new Image(getClass().getResourceAsStream(
+                "/resources/Metal23_col.jpg")));
         steel.setBumpMap(new Image(getClass().getResourceAsStream(
                 "/resources/Metal23_disp.jpg")));
 
@@ -54,6 +56,7 @@ public class Capstan extends Application {
         group = new Group();
         group.getChildren().add(wheel);
         group.getChildren().add(pole);
+        group.getChildren().add(new AmbientLight());
         group.setRotationAxis(Rotate.X_AXIS);
 
         scene = new Scene(group, SCENE_WIDTH, SCENE_HEIGHT);
