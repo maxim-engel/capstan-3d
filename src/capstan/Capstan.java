@@ -4,7 +4,6 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.*;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.transform.Rotate;
@@ -29,29 +28,9 @@ public class Capstan extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        PhongMaterial steel = new PhongMaterial();
-        steel.setDiffuseMap(new Image(getClass().getResourceAsStream(
-                "/resources/Metal23_col.jpg")));
-        steel.setBumpMap(new Image(getClass().getResourceAsStream(
-                "/resources/Metal23_disp.jpg")));
 
-        PhongMaterial wood = new PhongMaterial();
-        wood.setDiffuseMap(new Image(getClass().getResourceAsStream(
-                "/resources/Planks12_col.jpg")));
-        wood.setBumpMap(new Image(getClass().getResourceAsStream(
-                "/resources/Planks12_disp.jpg")));
-
-        wheel = new Cylinder(WHEEL_RADIUS, 10);
-        wheel.setMaterial(wood);
-        wheel.rotateProperty().set(90);
-        wheel.translateYProperty().set(-WHEEL_RADIUS);
-        wheel.translateXProperty().set(-POLE_LENGTH);
-
-        pole = new Cylinder(5, POLE_LENGTH);
-        pole.setMaterial(steel);
-        pole.rotateProperty().set(90);
-        pole.translateYProperty().set(-WHEEL_RADIUS);
-        pole.translateXProperty().set(-POLE_LENGTH / 2);
+        preparePole();
+        prepareWheel();
 
         group = new Group();
         group.getChildren().add(wheel);
@@ -70,10 +49,38 @@ public class Capstan extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        startTheAnimation();
+        startAnimation();
     }
 
-    private void startTheAnimation() {
+    private void preparePole() {
+        PhongMaterial steel = new PhongMaterial();
+        steel.setDiffuseMap(new Image(getClass().getResourceAsStream(
+                "/resources/Metal23_col.jpg")));
+        steel.setBumpMap(new Image(getClass().getResourceAsStream(
+                "/resources/Metal23_disp.jpg")));
+
+        pole = new Cylinder(5, POLE_LENGTH);
+        pole.setMaterial(steel);
+        pole.rotateProperty().set(90);
+        pole.translateYProperty().set(-WHEEL_RADIUS);
+        pole.translateXProperty().set(-POLE_LENGTH / 2);
+    }
+
+    private void prepareWheel() {
+        PhongMaterial wood = new PhongMaterial();
+        wood.setDiffuseMap(new Image(getClass().getResourceAsStream(
+                "/resources/Planks12_col.jpg")));
+        wood.setBumpMap(new Image(getClass().getResourceAsStream(
+                "/resources/Planks12_disp.jpg")));
+
+        wheel = new Cylinder(WHEEL_RADIUS, 10);
+        wheel.setMaterial(wood);
+        wheel.rotateProperty().set(90);
+        wheel.translateYProperty().set(-WHEEL_RADIUS);
+        wheel.translateXProperty().set(-POLE_LENGTH);
+    }
+
+    private void startAnimation() {
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
