@@ -82,29 +82,29 @@ public class Capstan extends Application {
         wheel.setMaterial(wood);
 //        wheel.rotateProperty().set(90);
         wheel.getTransforms().add(new Rotate(90, 0, 0, 0, Rotate.Z_AXIS));
-//        wheel.translateYProperty().set(-WHEEL_RADIUS);
-//        wheel.translateXProperty().set(-POLE_LENGTH);
-        wheel.getTransforms().add(new Translate(-WHEEL_RADIUS,POLE_LENGTH,0));
+        wheel.translateYProperty().set(-WHEEL_RADIUS);
+        wheel.translateXProperty().set(-POLE_LENGTH);
+//        wheel.getTransforms().add(new Translate(-WHEEL_RADIUS,POLE_LENGTH,0));
     }
 
     private void startAnimation() {
 
-        RotateTransition wheelRotation = new RotateTransition(Duration.seconds(6), wheel);
+        RotateTransition wheelRotation = new RotateTransition(Duration.seconds(60), wheel);
         wheelRotation.setCycleCount(Integer.MAX_VALUE);
         wheelRotation.setAxis(Rotate.X_AXIS);
 //        wheelRotation.axisProperty().set(Rotate.X_AXIS);
-        wheelRotation.setByAngle(1200);
+        wheelRotation.setByAngle(360 * POLE_LENGTH / WHEEL_RADIUS);
         wheelRotation.setInterpolator(Interpolator.LINEAR);
 
-        RotateTransition capstanRotation = new RotateTransition(Duration.seconds(6), group);
+        RotateTransition capstanRotation = new RotateTransition(Duration.seconds(60), group);
         capstanRotation.setCycleCount(Integer.MAX_VALUE);
 //        capstanRotation.setAxis(Rotate.Y_AXIS);
 //        capstanRotation.axisProperty().set(Rotate.Y_AXIS);
         capstanRotation.setAxis(centerPoint.midpoint(Rotate.Y_AXIS));
-        capstanRotation.setByAngle(360);
+        capstanRotation.setByAngle(-360);
         capstanRotation.setInterpolator(Interpolator.LINEAR);
 
-        ParallelTransition animation = new ParallelTransition(capstanRotation);
+        ParallelTransition animation = new ParallelTransition(wheelRotation,capstanRotation);
         animation.play();
 
     }
