@@ -2,7 +2,6 @@ package capstan;
 
 import javafx.animation.*;
 import javafx.application.Application;
-import javafx.geometry.Point3D;
 import javafx.scene.*;
 import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
@@ -14,7 +13,7 @@ import javafx.util.Duration;
 
 /**
  * @author LabGroup
- * @version 0.1
+ * @version 1.0
  */
 public class Capstan extends Application {
 
@@ -25,33 +24,36 @@ public class Capstan extends Application {
 
     private Scene scene;
     private PerspectiveCamera camera;
-    private Group group;
+    private Group capstan;
     private Cylinder wheel;
     private Cylinder pole;
-    private Point3D centerPoint = new Point3D(0,0,0);
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        preparePole();
-        prepareWheel();
+        prepareCapstan();
 
-        group = new Group();
-        group.getChildren().addAll(new AmbientLight(), wheel, pole);
-//        group.setRotationAxis(Rotate.X_AXIS);
-
-        scene = new Scene(group, SCENE_WIDTH, SCENE_HEIGHT);
+        scene = new Scene(capstan, SCENE_WIDTH, SCENE_HEIGHT);
         camera = new PerspectiveCamera(true);
         scene.setCamera(camera);
         camera.translateZProperty().set(-1500);
         camera.setNearClip(1);
         camera.setFarClip(2000);
 
-        primaryStage.setTitle("Capstan");
+        primaryStage.setTitle("Computergrafik Labor 3 - Capstan");
         primaryStage.setScene(scene);
         primaryStage.show();
 
         startAnimation();
+    }
+
+    private void prepareCapstan() {
+        preparePole();
+        prepareWheel();
+
+        capstan = new Group();
+        capstan.getChildren().addAll(new AmbientLight(), wheel, pole);
+        capstan.getTransforms().add(new Translate(-POLE_LENGTH / 2, -WHEEL_RADIUS, 0));
     }
 
     private void preparePole() {
@@ -63,11 +65,8 @@ public class Capstan extends Application {
 
         pole = new Cylinder(5, POLE_LENGTH);
         pole.setMaterial(steel);
-//        pole.rotateProperty().set(90);
+
         pole.getTransforms().add(new Rotate(90, 0, 0, 0, Rotate.Z_AXIS));
-//        pole.translateYProperty().set(-WHEEL_RADIUS);
-//        pole.translateXProperty().set(-POLE_LENGTH / 2);
-        pole.getTransforms().add(new Translate(-WHEEL_RADIUS,POLE_LENGTH / 2,0));
     }
 
     private void prepareWheel() {
@@ -77,35 +76,27 @@ public class Capstan extends Application {
         wood.setBumpMap(new Image(getClass().getResourceAsStream(
                 "/resources/Planks12_disp.jpg")));
 
-
         wheel = new Cylinder(WHEEL_RADIUS, 10);
         wheel.setMaterial(wood);
-//        wheel.rotateProperty().set(90);
+
         wheel.getTransforms().add(new Rotate(90, 0, 0, 0, Rotate.Z_AXIS));
-        wheel.translateYProperty().set(-WHEEL_RADIUS);
-        wheel.translateXProperty().set(-POLE_LENGTH);
-//        wheel.getTransforms().add(new Translate(-WHEEL_RADIUS,POLE_LENGTH,0));
+        wheel.translateXProperty().set(-POLE_LENGTH / 2);
     }
 
     private void startAnimation() {
-
         RotateTransition wheelRotation = new RotateTransition(Duration.seconds(60), wheel);
         wheelRotation.setCycleCount(Integer.MAX_VALUE);
         wheelRotation.setAxis(Rotate.X_AXIS);
-//        wheelRotation.axisProperty().set(Rotate.X_AXIS);
         wheelRotation.setByAngle(360 * POLE_LENGTH / WHEEL_RADIUS);
         wheelRotation.setInterpolator(Interpolator.LINEAR);
 
-        RotateTransition capstanRotation = new RotateTransition(Duration.seconds(60), group);
+        RotateTransition capstanRotation = new RotateTransition(Duration.seconds(60), capstan);
         capstanRotation.setCycleCount(Integer.MAX_VALUE);
-//        capstanRotation.setAxis(Rotate.Y_AXIS);
-//        capstanRotation.axisProperty().set(Rotate.Y_AXIS);
-        capstanRotation.setAxis(centerPoint.midpoint(Rotate.Y_AXIS));
+        capstanRotation.setAxis(Rotate.Y_AXIS);
         capstanRotation.setByAngle(-360);
         capstanRotation.setInterpolator(Interpolator.LINEAR);
 
-        ParallelTransition animation = new ParallelTransition(wheelRotation,capstanRotation);
+        ParallelTransition animation = new ParallelTransition(wheelRotation, capstanRotation);
         animation.play();
-
     }
 }
